@@ -1,579 +1,700 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Continual Learning for Online Behavioral Analytics — ICWSM 2026 Tutorial</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continual Learning for Online Behavioral Analytics — ICWSM 2026 Tutorial</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    :root {
-      --navy:   #1a3058;
-      --accent: #2b5797;
-      --text:   #1f2937;
-      --muted:  #6b7280;
-      --rule:   #d1d5db;
-      --bg:     #ffffff;
-      --surface:#f8f9fa;
-      --max-w:  860px;
-    }
+        :root {
+            --navy: #1a3058;
+            --accent: #2b5797;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --rule: #d1d5db;
+            --bg: #ffffff;
+            --surface: #f8f9fa;
+            --max-w: 860px;
+        }
 
-    html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    body {
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 17px;
-      line-height: 1.75;
-      color: var(--text);
-      background: var(--bg);
-    }
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 17px;
+            line-height: 1.75;
+            color: var(--text);
+            background: var(--bg);
+        }
 
-    /* ── NAV ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--navy);
-      border-bottom: 3px solid var(--accent);
-    }
-    nav ul {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0;
-      list-style: none;
-      max-width: var(--max-w);
-      margin: 0 auto;
-    }
-    nav a {
-      display: block;
-      padding: 13px 18px;
-      color: #cbd5e1;
-      text-decoration: none;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 13.5px;
-      letter-spacing: 0.03em;
-      transition: color 0.15s;
-    }
-    nav a:hover { color: #ffffff; }
+        /* ── NAV ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--navy);
+            border-bottom: 3px solid var(--accent);
+        }
 
-    /* ── HERO ── */
-    header {
-      background: var(--navy);
-      color: #ffffff;
-      padding: 60px 24px 52px;
-      text-align: center;
-    }
-    .badge {
-      display: inline-block;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #93c5fd;
-      margin-bottom: 20px;
-    }
-    header h1 {
-      font-size: clamp(22px, 4vw, 34px);
-      font-weight: 700;
-      line-height: 1.25;
-      max-width: 680px;
-      margin: 0 auto 28px;
-    }
-    .meta {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 15px;
-      color: #93c5fd;
-      line-height: 1.6;
-    }
-    .authors {
-      margin-top: 24px;
-      font-size: 16px;
-      color: #e2e8f0;
-    }
-    .authors a {
-      color: #93c5fd;
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.15s;
-    }
-    .authors a:hover { border-color: #93c5fd; }
-    .affil {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #94a3b8;
-      font-style: italic;
-    }
+        nav ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0;
+            list-style: none;
+            max-width: var(--max-w);
+            margin: 0 auto;
+        }
 
-    /* ── LAYOUT ── */
-    main {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
+        nav a {
+            display: block;
+            padding: 13px 18px;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 13.5px;
+            letter-spacing: 0.03em;
+            transition: color 0.15s;
+        }
 
-    section {
-      padding-top: 64px;
-    }
+        nav a:hover {
+            color: #ffffff;
+        }
 
-    h2 {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--navy);
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--navy);
-      margin-bottom: 28px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      letter-spacing: -0.01em;
-    }
+        /* ── HERO ── */
+        header {
+            background: var(--navy);
+            color: #ffffff;
+            padding: 60px 24px 52px;
+            text-align: center;
+        }
 
-    h3 {
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--navy);
-      margin: 28px 0 10px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+        .badge {
+            display: inline-block;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #93c5fd;
+            margin-bottom: 20px;
+        }
 
-    p { margin-bottom: 1em; }
-    p:last-child { margin-bottom: 0; }
+        header h1 {
+            font-size: clamp(22px, 4vw, 34px);
+            font-weight: 700;
+            line-height: 1.25;
+            max-width: 680px;
+            margin: 0 auto 28px;
+        }
 
-    /* ── ABSTRACT ── */
-    .abstract-box {
-      border-left: 4px solid var(--accent);
-      padding: 18px 22px;
-      background: var(--surface);
-      font-size: 16px;
-      line-height: 1.8;
-    }
+        .meta {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 15px;
+            color: #93c5fd;
+            line-height: 1.6;
+        }
 
-    /* ── SCHEDULE ── */
-    .schedule {
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 15.5px;
-    }
-    .schedule thead tr {
-      background: var(--navy);
-      color: #ffffff;
-    }
-    .schedule thead th {
-      text-align: left;
-      padding: 11px 16px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .schedule tbody tr:nth-child(even) { background: var(--surface); }
-    .schedule tbody tr:hover { background: #e8f0fb; }
-    .schedule td {
-      padding: 11px 16px;
-      border-bottom: 1px solid var(--rule);
-      vertical-align: top;
-    }
-    .schedule td:first-child {
-      white-space: nowrap;
-      color: var(--muted);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 13.5px;
-    }
-    .schedule td strong {
-      color: var(--navy);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-    .break-row td {
-      background: #fef9c3 !important;
-      color: var(--muted);
-      font-style: italic;
-      font-size: 14.5px;
-    }
+        .authors {
+            margin-top: 24px;
+            font-size: 16px;
+            color: #e2e8f0;
+        }
 
-    /* ── TUTORIAL PARTS ── */
-    .part-block {
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      padding: 22px 26px;
-      margin-bottom: 20px;
-    }
-    .part-block .part-label {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 6px;
-    }
-    .part-block h3 {
-      margin: 0 0 12px;
-      font-size: 16.5px;
-      color: var(--navy);
-    }
-    .part-block p {
-      font-size: 15.5px;
-      color: var(--text);
-      margin-bottom: 0.75em;
-    }
-    .part-block p:last-child { margin-bottom: 0; }
-    .part-block .topics {
-      margin: 10px 0 0;
-      padding-left: 0;
-      list-style: none;
-    }
-    .part-block .topics li {
-      font-size: 15px;
-      padding: 3px 0 3px 18px;
-      position: relative;
-      color: var(--text);
-    }
-    .part-block .topics li::before {
-      content: "–";
-      position: absolute;
-      left: 0;
-      color: var(--accent);
-    }
+        .authors a {
+            color: #93c5fd;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.15s;
+        }
 
-    /* ── PRESENTERS ── */
-    .presenter-card {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 20px 24px;
-      align-items: start;
-      border-top: 1px solid var(--rule);
-      padding-top: 28px;
-      margin-top: 28px;
-    }
-    .presenter-card:first-of-type {
-      border-top: none;
-      padding-top: 0;
-      margin-top: 0;
-    }
-    .presenter-initials {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background: var(--navy);
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      letter-spacing: 0.05em;
-    }
-    .presenter-name {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 2px;
-    }
-    .presenter-title {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 10px;
-      font-style: italic;
-    }
-    .presenter-bio {
-      font-size: 15.5px;
-      line-height: 1.75;
-    }
+        .authors a:hover {
+            border-color: #93c5fd;
+        }
 
-    /* ── RELATED TUTORIALS ── */
-    .related-list {
-      list-style: none;
-      padding: 0;
-    }
-    .related-list li {
-      padding: 16px 20px;
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      margin-bottom: 12px;
-      font-size: 15.5px;
-    }
-    .related-list li .conf-tag {
-      display: inline-block;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 11.5px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 4px;
-    }
-    .related-list li .rel-title {
-      font-weight: bold;
-      color: var(--text);
-      display: block;
-      margin-bottom: 4px;
-    }
-    .related-list li .rel-note {
-      font-size: 14.5px;
-      color: var(--muted);
-    }
+        .affil {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #94a3b8;
+            font-style: italic;
+        }
 
-    /* ── FOOTER ── */
-    footer {
-      background: var(--surface);
-      border-top: 1px solid var(--rule);
-      text-align: center;
-      padding: 28px 24px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 13.5px;
-      color: var(--muted);
-    }
-    footer p + p { margin-top: 6px; }
+        /* ── LAYOUT ── */
+        main {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 540px) {
-      nav a { padding: 11px 11px; font-size: 12px; }
-      header { padding: 44px 18px 36px; }
-      main { padding: 0 18px 60px; }
-      .presenter-card { grid-template-columns: 1fr; }
-      .presenter-initials { width: 48px; height: 48px; font-size: 15px; }
-    }
-  </style>
+        section {
+            padding-top: 64px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--navy);
+            margin-bottom: 28px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--navy);
+            margin: 28px 0 10px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        p {
+            margin-bottom: 1em;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ── ABSTRACT ── */
+        .abstract-box {
+            border-left: 4px solid var(--accent);
+            padding: 18px 22px;
+            background: var(--surface);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        /* ── SCHEDULE ── */
+        .schedule {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 15.5px;
+        }
+
+        .schedule thead tr {
+            background: var(--navy);
+            color: #ffffff;
+        }
+
+        .schedule thead th {
+            text-align: left;
+            padding: 11px 16px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .schedule tbody tr:nth-child(even) {
+            background: var(--surface);
+        }
+
+        .schedule tbody tr:hover {
+            background: #e8f0fb;
+        }
+
+        .schedule td {
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--rule);
+            vertical-align: top;
+        }
+
+        .schedule td:first-child {
+            white-space: nowrap;
+            color: var(--muted);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 13.5px;
+        }
+
+        .schedule td strong {
+            color: var(--navy);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .break-row td {
+            background: #fef9c3 !important;
+            color: var(--muted);
+            font-style: italic;
+            font-size: 14.5px;
+        }
+
+        /* ── TUTORIAL PARTS ── */
+        .part-block {
+            border: 1px solid var(--rule);
+            border-radius: 4px;
+            padding: 22px 26px;
+            margin-bottom: 20px;
+        }
+
+        .part-block .part-label {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+
+        .part-block h3 {
+            margin: 0 0 12px;
+            font-size: 16.5px;
+            color: var(--navy);
+        }
+
+        .part-block p {
+            font-size: 15.5px;
+            color: var(--text);
+            margin-bottom: 0.75em;
+        }
+
+        .part-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        .part-block .topics {
+            margin: 10px 0 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .part-block .topics li {
+            font-size: 15px;
+            padding: 3px 0 3px 18px;
+            position: relative;
+            color: var(--text);
+        }
+
+        .part-block .topics li::before {
+            content: "–";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* ── PRESENTERS ── */
+        .presenter-card {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 20px 24px;
+            align-items: start;
+            border-top: 1px solid var(--rule);
+            padding-top: 28px;
+            margin-top: 28px;
+        }
+
+        .presenter-card:first-of-type {
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        .presenter-initials {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: var(--navy);
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            letter-spacing: 0.05em;
+        }
+
+        .presenter-name {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 2px;
+        }
+
+        .presenter-title {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .presenter-bio {
+            font-size: 15.5px;
+            line-height: 1.75;
+        }
+
+        /* ── RELATED TUTORIALS ── */
+        .related-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .related-list li {
+            padding: 16px 20px;
+            border: 1px solid var(--rule);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-size: 15.5px;
+        }
+
+        .related-list li .conf-tag {
+            display: inline-block;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .related-list li .rel-title {
+            font-weight: bold;
+            color: var(--text);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .related-list li .rel-note {
+            font-size: 14.5px;
+            color: var(--muted);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--rule);
+            text-align: center;
+            padding: 28px 24px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 13.5px;
+            color: var(--muted);
+        }
+
+        footer p+p {
+            margin-top: 6px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 540px) {
+            nav a {
+                padding: 11px 11px;
+                font-size: 12px;
+            }
+
+            header {
+                padding: 44px 18px 36px;
+            }
+
+            main {
+                padding: 0 18px 60px;
+            }
+
+            .presenter-card {
+                grid-template-columns: 1fr;
+            }
+
+            .presenter-initials {
+                width: 48px;
+                height: 48px;
+                font-size: 15px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav>
-  <ul>
-    <li><a href="#overview">Overview</a></li>
-    <li><a href="#audience">Audience</a></li>
-    <li><a href="#schedule">Schedule</a></li>
-    <li><a href="#content">Content</a></li>
-    <li><a href="#presenters">Presenters</a></li>
-    <li><a href="#related">Related</a></li>
-  </ul>
-</nav>
+    <!-- NAV -->
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#audience">Audience</a></li>
+            <li><a href="#schedule">Schedule</a></li>
+            <li><a href="#content">Content</a></li>
+            <li><a href="#presenters">Presenters</a></li>
+            <li><a href="#related">Related</a></li>
+        </ul>
+    </nav>
 
-<!-- HERO -->
-<header>
-  <div class="badge">ICWSM 2026 &mdash; Half-Day Tutorial</div>
-  <h1>Continual Learning for Online Behavioral Analytics</h1>
-  <div class="meta">Lecture-style &nbsp;|&nbsp; 4 Hours &nbsp;|&nbsp; ICWSM 2026</div>
-  <div class="authors">
-    Yasas Senarath &nbsp;&middot;&nbsp; Marcos Zampieri &nbsp;&middot;&nbsp; Hemant Purohit
-  </div>
-  <div class="affil">
-    Information Sciences and Technology (IST) Department, George Mason University, Fairfax, Virginia
-  </div>
-</header>
+    <!-- HERO -->
+    <header>
+        <div class="badge">ICWSM 2026 &mdash; Half-Day Tutorial</div>
+        <h1>Continual Learning for Online Behavioral Analytics</h1>
+        <div class="meta">Lecture-style &nbsp;|&nbsp; 4 Hours &nbsp;|&nbsp; ICWSM 2026</div>
+        <div class="authors">
+            Yasas Senarath &nbsp;&middot;&nbsp; Marcos Zampieri &nbsp;&middot;&nbsp; Hemant Purohit
+        </div>
+        <div class="affil">
+            Information Sciences and Technology (IST) Department, George Mason University, Fairfax, Virginia
+        </div>
+    </header>
 
-<!-- MAIN -->
-<main>
+    <!-- MAIN -->
+    <main>
 
-  <!-- OVERVIEW -->
-  <section id="overview">
-    <h2>Overview</h2>
-    <div class="abstract-box">
-      <p>Consider a financial sentiment analysis system deployed to monitor real-time market trends from social media. As user-generated content evolves, such systems often suffer performance degradation when encountering linguistic novelty, failing to adapt to shifting underlying data distributions. In this high-stakes environment, the deployed system may prove inadequate in detecting current trends, potentially resulting in tangible harm. This scenario underscores the critical inadequacy of traditional, static model training pipelines as they neglect the dynamic, non-stationary nature inherent to social media data and thus negatively impact several applications, including market trend analysis, harmful content detection for public safety, brand monitoring, and scam detection.</p>
-      <p>This tutorial posits <strong>Continual Learning (CL)</strong> as the indispensable solution, enabling systems to assimilate evolving data distributions without incurring the prohibitive resource expenditure associated with complete retraining. Distinguishing itself from general CL tutorials, this session focuses on online behavioral analytics, addressing domain-specific challenges like streaming social media data and resource-constrained environments. We will provide a comprehensive background on CL, summarize current approaches, and detail techniques tailored for dynamic, limited-resource settings. Finally, we discuss open challenges and prospective research avenues.</p>
-    </div>
-  </section>
+        <!-- OVERVIEW -->
+        <section id="overview">
+            <h2>Overview</h2>
+            <div class="abstract-box">
+                <p>Consider a financial sentiment analysis system deployed to monitor real-time market trends from
+                    social media. As user-generated content evolves, such systems often suffer performance degradation
+                    when encountering linguistic novelty, failing to adapt to shifting underlying data distributions. In
+                    this high-stakes environment, the deployed system may prove inadequate in detecting current trends,
+                    potentially resulting in tangible harm. This scenario underscores the critical inadequacy of
+                    traditional, static model training pipelines as they neglect the dynamic, non-stationary nature
+                    inherent to social media data and thus negatively impact several applications, including market
+                    trend analysis, harmful content detection for public safety, brand monitoring, and scam detection.
+                </p>
+                <p>This tutorial posits <strong>Continual Learning (CL)</strong> as the indispensable solution, enabling
+                    systems to assimilate evolving data distributions without incurring the prohibitive resource
+                    expenditure associated with complete retraining. Distinguishing itself from general CL tutorials,
+                    this session focuses on online behavioral analytics, addressing domain-specific challenges like
+                    streaming social media data and resource-constrained environments. We will provide a comprehensive
+                    background on CL, summarize current approaches, and detail techniques tailored for dynamic,
+                    limited-resource settings. Finally, we discuss open challenges and prospective research avenues.</p>
+            </div>
+        </section>
 
-  <!-- AUDIENCE -->
-  <section id="audience">
-    <h2>Target Audience</h2>
-    <p>This tutorial is designed for <strong>researchers, engineers, and practitioners</strong> engaged in the design and development of systems for online behavior analytics. The audience is expected to have basic knowledge of probability, text classification, and deep learning. Prior familiarity with fine-tuning transformer-based models is preferred. <em>No prior knowledge of Continual Learning is required.</em></p>
+        <!-- AUDIENCE -->
+        <section id="audience">
+            <h2>Target Audience</h2>
+            <p>This tutorial is designed for <strong>researchers, engineers, and practitioners</strong> engaged in the
+                design and development of systems for online behavior analytics. The audience is expected to have basic
+                knowledge of probability, text classification, and deep learning. Prior familiarity with fine-tuning
+                transformer-based models is preferred. <em>No prior knowledge of Continual Learning is required.</em>
+            </p>
 
-    <h3>Why This Tutorial Is Relevant to ICWSM</h3>
-    <p><strong>Behavioral Analytics Systems:</strong> The primary application addressed is social media and web-based behavioral analytics systems — a core interest of the ICWSM community. Among the various techniques employed in such systems, text classifiers assume a significant role in understanding and summarizing online content.</p>
-    <p><strong>Continual Learning:</strong> Systems intended for deployment necessitate regular updates to accommodate shifts in the observed data distribution over time. This requirement is especially pronounced within web and social media analytics, where user behavior changes regularly with real-world events and the shared interests of the public.</p>
-  </section>
+            <h3>Why This Tutorial Is Relevant to ICWSM</h3>
+            <p><strong>Behavioral Analytics Systems:</strong> The primary application addressed is social media and
+                web-based behavioral analytics systems — a core interest of the ICWSM community. Among the various
+                techniques employed in such systems, text classifiers assume a significant role in understanding and
+                summarizing online content.</p>
+            <p><strong>Continual Learning:</strong> Systems intended for deployment necessitate regular updates to
+                accommodate shifts in the observed data distribution over time. This requirement is especially
+                pronounced within web and social media analytics, where user behavior changes regularly with real-world
+                events and the shared interests of the public.</p>
+        </section>
 
-  <!-- SCHEDULE -->
-  <section id="schedule">
-    <h2>Schedule</h2>
-    <p style="margin-bottom: 20px; color: var(--muted); font-size: 15.5px;">Half-day tutorial &mdash; total duration 4 hours.</p>
-    <table class="schedule">
-      <thead>
-        <tr>
-          <th>Duration</th>
-          <th>Session</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>30 min</td>
-          <td><strong>Part I</strong> &mdash; Introduction and Background<br>
-            <span style="font-size:14px; color:#6b7280;">Motivation &amp; applications within web/social media analytics</span></td>
-        </tr>
-        <tr>
-          <td>45 min</td>
-          <td><strong>Part II</strong> &mdash; Experience-Replay-based Methods<br>
-            <span style="font-size:14px; color:#6b7280;">Approaches used for exemplar selection; techniques for utilizing replay data</span></td>
-        </tr>
-        <tr class="break-row">
-          <td>15 min</td>
-          <td>Break</td>
-        </tr>
-        <tr>
-          <td>45 min</td>
-          <td><strong>Part III</strong> &mdash; Regularization-based Methods<br>
-            <span style="font-size:14px; color:#6b7280;">Parameter regularization &amp; function regularization</span></td>
-        </tr>
-        <tr>
-          <td>30 min</td>
-          <td><strong>Part IV</strong> &mdash; Beyond Traditional Settings<br>
-            <span style="font-size:14px; color:#6b7280;">Adapter-based learning &amp; reservoir sampling</span></td>
-        </tr>
-        <tr class="break-row">
-          <td>15 min</td>
-          <td>Break</td>
-        </tr>
-        <tr>
-          <td>40 min</td>
-          <td><strong>Part V</strong> &mdash; Open Challenges and Future Directions<br>
-            <span style="font-size:14px; color:#6b7280;">LLMs as teachers; LLM-specific CL challenges</span></td>
-        </tr>
-        <tr>
-          <td>20 min</td>
-          <td><strong>Conclusion &amp; Q&amp;A</strong></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+        <!-- SCHEDULE -->
+        <section id="schedule">
+            <h2>Schedule</h2>
+            <p style="margin-bottom: 20px; color: var(--muted); font-size: 15.5px;">Half-day tutorial &mdash; total
+                duration 4 hours.</p>
+            <table class="schedule">
+                <thead>
+                    <tr>
+                        <th>Duration</th>
+                        <th>Session</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>30 min</td>
+                        <td><strong>Part I</strong> &mdash; Introduction and Background<br>
+                            <span style="font-size:14px; color:#6b7280;">Motivation &amp; applications within web/social
+                                media analytics</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>45 min</td>
+                        <td><strong>Part II</strong> &mdash; Experience-Replay-based Methods<br>
+                            <span style="font-size:14px; color:#6b7280;">Approaches used for exemplar selection;
+                                techniques for utilizing replay data</span>
+                        </td>
+                    </tr>
+                    <tr class="break-row">
+                        <td>15 min</td>
+                        <td>Break</td>
+                    </tr>
+                    <tr>
+                        <td>45 min</td>
+                        <td><strong>Part III</strong> &mdash; Regularization-based Methods<br>
+                            <span style="font-size:14px; color:#6b7280;">Parameter regularization &amp; function
+                                regularization</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>30 min</td>
+                        <td><strong>Part IV</strong> &mdash; Beyond Traditional Settings<br>
+                            <span style="font-size:14px; color:#6b7280;">Adapter-based learning &amp; reservoir
+                                sampling</span>
+                        </td>
+                    </tr>
+                    <tr class="break-row">
+                        <td>15 min</td>
+                        <td>Break</td>
+                    </tr>
+                    <tr>
+                        <td>40 min</td>
+                        <td><strong>Part V</strong> &mdash; Open Challenges and Future Directions<br>
+                            <span style="font-size:14px; color:#6b7280;">LLMs as teachers; LLM-specific CL
+                                challenges</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>20 min</td>
+                        <td><strong>Conclusion &amp; Q&amp;A</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-  <!-- CONTENT -->
-  <section id="content">
-    <h2>Tutorial Content</h2>
+        <!-- CONTENT -->
+        <section id="content">
+            <h2>Tutorial Content</h2>
 
-    <div class="part-block">
-      <div class="part-label">Part I &nbsp;&middot;&nbsp; 30 minutes</div>
-      <h3>Introduction and Background</h3>
-      <p>The initial segment addresses the foundational background and motivation for investigating CL for online behavioral analytics systems. We explore the general definition of the CL problem and its variants, then focus on key challenges such as catastrophic forgetting and scalability of LLMs for online behavior detection.</p>
-      <ul class="topics">
-        <li>Motivation for Continual Learning in social media contexts</li>
-        <li>Definition of CL and problem variants (task-incremental, class-incremental, etc.)</li>
-        <li>The stability-plasticity dilemma and catastrophic forgetting</li>
-        <li>Applications: financial market analysis, crisis informatics (disaster response), cybersecurity (scam detection)</li>
-      </ul>
-    </div>
+            <div class="part-block">
+                <div class="part-label">Part I &nbsp;&middot;&nbsp; 30 minutes</div>
+                <h3>Introduction and Background</h3>
+                <p>The initial segment addresses the foundational background and motivation for investigating CL for
+                    online behavioral analytics systems. We explore the general definition of the CL problem and its
+                    variants, then focus on key challenges such as catastrophic forgetting and scalability of LLMs for
+                    online behavior detection.</p>
+                <ul class="topics">
+                    <li>Motivation for Continual Learning in social media contexts</li>
+                    <li>Definition of CL and problem variants (task-incremental, class-incremental, etc.)</li>
+                    <li>The stability-plasticity dilemma and catastrophic forgetting</li>
+                    <li>Applications: financial market analysis, crisis informatics (disaster response), cybersecurity
+                        (scam detection)</li>
+                </ul>
+            </div>
 
-    <div class="part-block">
-      <div class="part-label">Part II &nbsp;&middot;&nbsp; 45 minutes</div>
-      <h3>Experience-Replay-based Methods</h3>
-      <p>Replay represents the most prevalent approach employed for CL across various problems and domains. It contributes to performance enhancement without requiring the entirety of previously trained datasets. This method consists of two components: a replay buffer and model adaptation.</p>
-      <ul class="topics">
-        <li><strong>Exemplar Selection for Replay:</strong> Task-aware random selection; clustering-based approaches for diverse sample selection; influence-based selection</li>
-        <li><strong>Replay-based Model Adaptation:</strong> Data concatenation strategies; handling class imbalance; data regularization with loss constraints comparing replay data on current vs. previous model versions</li>
-      </ul>
-    </div>
+            <div class="part-block">
+                <div class="part-label">Part II &nbsp;&middot;&nbsp; 45 minutes</div>
+                <h3>Experience-Replay-based Methods</h3>
+                <p>Replay represents the most prevalent approach employed for CL across various problems and domains. It
+                    contributes to performance enhancement without requiring the entirety of previously trained
+                    datasets. This method consists of two components: a replay buffer and model adaptation.</p>
+                <ul class="topics">
+                    <li><strong>Exemplar Selection for Replay:</strong> Task-aware random selection; clustering-based
+                        approaches for diverse sample selection; influence-based selection</li>
+                    <li><strong>Replay-based Model Adaptation:</strong> Data concatenation strategies; handling class
+                        imbalance; data regularization with loss constraints comparing replay data on current vs.
+                        previous model versions</li>
+                </ul>
+            </div>
 
-    <div class="part-block">
-      <div class="part-label">Part III &nbsp;&middot;&nbsp; 45 minutes</div>
-      <h3>Regularization-based Methods</h3>
-      <p>Parameter regularization involves storing model parameters deemed important for prior tasks in a knowledge store, then utilizing that stored knowledge during current task learning as a regularizer — aiming to prevent overriding of weights critical to past tasks.</p>
-      <ul class="topics">
-        <li><strong>Parameter Regularization:</strong> Importance-weighted parameter preservation; elastic weight consolidation and related techniques</li>
-        <li><strong>Feature (Function) Regularization:</strong> Constraining the feature space during new task learning to prevent divergence from features learned in prior tasks</li>
-      </ul>
-    </div>
+            <div class="part-block">
+                <div class="part-label">Part III &nbsp;&middot;&nbsp; 45 minutes</div>
+                <h3>Regularization-based Methods</h3>
+                <p>Parameter regularization involves storing model parameters deemed important for prior tasks in a
+                    knowledge store, then utilizing that stored knowledge during current task learning as a regularizer
+                    — aiming to prevent overriding of weights critical to past tasks.</p>
+                <ul class="topics">
+                    <li><strong>Parameter Regularization:</strong> Importance-weighted parameter preservation; elastic
+                        weight consolidation and related techniques</li>
+                    <li><strong>Feature (Function) Regularization:</strong> Constraining the feature space during new
+                        task learning to prevent divergence from features learned in prior tasks</li>
+                </ul>
+            </div>
 
-    <div class="part-block">
-      <div class="part-label">Part IV &nbsp;&middot;&nbsp; 30 minutes</div>
-      <h3>Beyond Traditional Settings</h3>
-      <p>The standard CL approach often assumes sufficient resources and independent data samples. However, online behavioral analytics presents unique challenges: data arrives in high-velocity bursty streams, and user behaviors are inherently sequential and context-dependent.</p>
-      <ul class="topics">
-        <li><strong>Resource-Constrained Environments:</strong> Knowledge Distillation from continually updating teacher to lightweight student models; Parameter-Efficient Fine-Tuning (PEFT) with adapters</li>
-        <li><strong>Streaming Data Dynamics:</strong> Reservoir Sampling and its derivatives for minority-class representation without explicit task boundaries</li>
-      </ul>
-    </div>
+            <div class="part-block">
+                <div class="part-label">Part IV &nbsp;&middot;&nbsp; 30 minutes</div>
+                <h3>Beyond Traditional Settings</h3>
+                <p>The standard CL approach often assumes sufficient resources and independent data samples. However,
+                    online behavioral analytics presents unique challenges: data arrives in high-velocity bursty
+                    streams, and user behaviors are inherently sequential and context-dependent.</p>
+                <ul class="topics">
+                    <li><strong>Resource-Constrained Environments:</strong> Knowledge Distillation from continually
+                        updating teacher to lightweight student models; Parameter-Efficient Fine-Tuning (PEFT) with
+                        adapters</li>
+                    <li><strong>Streaming Data Dynamics:</strong> Reservoir Sampling and its derivatives for
+                        minority-class representation without explicit task boundaries</li>
+                </ul>
+            </div>
 
-    <div class="part-block">
-      <div class="part-label">Part V &nbsp;&middot;&nbsp; 40 minutes</div>
-      <h3>Open Challenges and Future Directions</h3>
-      <p>Continual fine-tuning of LLMs remains an open problem, as techniques such as regularization do not scale well with large numbers of parameters. This section surveys emerging research directions.</p>
-      <ul class="topics">
-        <li><strong>Continual Learning with LLMs:</strong> Using large language models as teachers to train smaller, efficient models suited for deployment</li>
-        <li><strong>From Internal to External Knowledge:</strong> External knowledge integration for continual text classification; Retrieval-Augmented Generation (RAG) for dynamic data access; tool-based learning</li>
-      </ul>
-    </div>
+            <div class="part-block">
+                <div class="part-label">Part V &nbsp;&middot;&nbsp; 40 minutes</div>
+                <h3>Open Challenges and Future Directions</h3>
+                <p>Continual fine-tuning of LLMs remains an open problem, as techniques such as regularization do not
+                    scale well with large numbers of parameters. This section surveys emerging research directions.</p>
+                <ul class="topics">
+                    <li><strong>Continual Learning with LLMs:</strong> Using large language models as teachers to train
+                        smaller, efficient models suited for deployment</li>
+                    <li><strong>From Internal to External Knowledge:</strong> External knowledge integration for
+                        continual text classification; Retrieval-Augmented Generation (RAG) for dynamic data access;
+                        tool-based learning</li>
+                </ul>
+            </div>
 
-  </section>
+        </section>
 
-  <!-- PRESENTERS -->
-  <section id="presenters">
-    <h2>Presenters</h2>
+        <!-- PRESENTERS -->
+        <section id="presenters">
+            <h2>Presenters</h2>
 
-    <div class="presenter-card">
-      <div class="presenter-initials">YS</div>
-      <div>
-        <div class="presenter-name">Yasas Senarath</div>
-        <div class="presenter-title">Ph.D. Candidate &mdash; George Mason University</div>
-        <p class="presenter-bio">Yasas Senarath is a Ph.D. candidate in Information Technology at George Mason University, specializing in Social Computing, Continual Learning, and Natural Language Understanding. His Ph.D. research focuses on robust continual learning frameworks for online behavioral analytics. His recent work, <em>Knowledge-guided Continual Learning for Behavioral Analytics Systems</em> (2025), directly tackles the stability-plasticity dilemma.</p>
-      </div>
-    </div>
+            <div class="presenter-card">
+                <div class="presenter-initials">YS</div>
+                <div>
+                    <div class="presenter-name">Yasas Senarath</div>
+                    <div class="presenter-title">Ph.D. Candidate &mdash; George Mason University</div>
+                    <p class="presenter-bio">Yasas Senarath is a Ph.D. candidate in Information Technology at George
+                        Mason University, specializing in Social Computing, Continual Learning, and Natural Language
+                        Understanding. His Ph.D. research focuses on robust continual learning frameworks for online
+                        behavioral analytics. His recent work, <em>Knowledge-guided Continual Learning for Behavioral
+                            Analytics Systems</em> (2025), directly tackles the stability-plasticity dilemma.</p>
+                </div>
+            </div>
 
-    <div class="presenter-card">
-      <div class="presenter-initials">MZ</div>
-      <div>
-        <div class="presenter-name">Marcos Zampieri</div>
-        <div class="presenter-title">Assistant Professor &mdash; George Mason University</div>
-        <p class="presenter-bio">Marcos Zampieri is an Assistant Professor at George Mason University. His main research interests are in Natural Language Processing (NLP). He regularly publishes in top-tier venues such as AAAI, ACL, CIKM, EMNLP, IJCAI, and NAACL, with work spanning offensive language and mental health modeling on social media. Marcos delivered the tutorial <em>Countering Hateful and Offensive Speech Online: Open Challenges</em> at EMNLP 2024, and has served as chair of workshops including SemEval, VarDial, and WMT. He was lead organizer of OffensEval-2019 and OffensEval-2020, two of the most widely participated offensive language identification shared tasks to date.</p>
-      </div>
-    </div>
+            <div class="presenter-card">
+                <div class="presenter-initials">MZ</div>
+                <div>
+                    <div class="presenter-name">Marcos Zampieri</div>
+                    <div class="presenter-title">Assistant Professor &mdash; George Mason University</div>
+                    <p class="presenter-bio">Marcos Zampieri is an Assistant Professor at George Mason University. His
+                        main research interests are in Natural Language Processing (NLP). He regularly publishes in
+                        top-tier venues such as AAAI, ACL, CIKM, EMNLP, IJCAI, and NAACL, with work spanning offensive
+                        language and mental health modeling on social media. Marcos delivered the tutorial
+                        <em>Countering Hateful and Offensive Speech Online: Open Challenges</em> at EMNLP 2024, and has
+                        served as chair of workshops including SemEval, VarDial, and WMT. He was lead organizer of
+                        OffensEval-2019 and OffensEval-2020, two of the most widely participated offensive language
+                        identification shared tasks to date.</p>
+                </div>
+            </div>
 
-    <div class="presenter-card">
-      <div class="presenter-initials">HP</div>
-      <div>
-        <div class="presenter-name">Hemant Purohit</div>
-        <div class="presenter-title">Associate Professor &mdash; George Mason University</div>
-        <p class="presenter-bio">Hemant Purohit is an Associate Professor in the Information Sciences &amp; Technology Department at George Mason University. His broad research interests lie in Social Computing, Natural Language Understanding, and Human-AI Collaboration, with a focus on creating robust applications for high-risk, dynamic environments in public services and nonprofits. He applies this research to managing natural crises (e.g., hurricanes), societal crises (e.g., hate and violence), and human crises (e.g., cyber attacks, scams). Hemant delivered an ICWSM 2013 tutorial on Crisis Mapping, Citizen Sensing, and Social Media Analytics.</p>
-      </div>
-    </div>
+            <div class="presenter-card">
+                <div class="presenter-initials">HP</div>
+                <div>
+                    <div class="presenter-name">Hemant Purohit</div>
+                    <div class="presenter-title">Associate Professor &mdash; George Mason University</div>
+                    <p class="presenter-bio">Hemant Purohit is an Associate Professor in the Information Sciences &amp;
+                        Technology Department at George Mason University. His broad research interests lie in Social
+                        Computing, Natural Language Understanding, and Human-AI Collaboration, with a focus on creating
+                        robust applications for high-risk, dynamic environments in public services and nonprofits. He
+                        applies this research to managing natural crises (e.g., hurricanes), societal crises (e.g., hate
+                        and violence), and human crises (e.g., cyber attacks, scams). Hemant delivered an ICWSM 2013
+                        tutorial on Crisis Mapping, Citizen Sensing, and Social Media Analytics.</p>
+                </div>
+            </div>
 
-  </section>
+        </section>
 
-  <!-- RELATED TUTORIALS -->
-  <section id="related">
-    <h2>Related Tutorials</h2>
-    <p style="margin-bottom: 22px;">The following tutorials from past conferences are related to this session.</p>
+    </main>
 
-    <ul class="related-list">
-      <li>
-        <span class="conf-tag">ICML 2021</span>
-        <span class="rel-title">Continual Learning with Deep Architectures</span>
-        <span class="rel-note"><strong>Similarities:</strong> Foundational CL methods and general machine learning techniques. <strong>Differences:</strong> Our focus is specifically on data and problems inherent to online behavior detection and discrete semantic shifts in linguistic data.</span>
-      </li>
-      <li>
-        <span class="conf-tag">NeurIPS 2022</span>
-        <span class="rel-title">Lifelong Learning (LL) Machines</span>
-        <span class="rel-note"><strong>Similarities:</strong> Foundational CL methods and general machine learning techniques. <strong>Differences:</strong> Our tutorial addresses the unique challenges of social media analytics rather than generic CL settings.</span>
-      </li>
-      <li>
-        <span class="conf-tag">WWW 2023</span>
-        <span class="rel-title">Lifelong Learning Cross-domain Recommender Systems</span>
-        <span class="rel-note"><strong>Similarities:</strong> Recommender systems are relevant to the ICWSM community. <strong>Differences:</strong> Our tutorial focuses on behavioral analytics systems rather than recommendation.</span>
-      </li>
-      <li>
-        <span class="conf-tag">CIKM 2025</span>
-        <span class="rel-title">Continual Recommender Systems</span>
-        <span class="rel-note"><strong>Similarities:</strong> Continual learning applied to web-scale systems. <strong>Differences:</strong> Our tutorial centers on text-based behavioral analytics rather than item recommendation.</span>
-      </li>
-      <li>
-        <span class="conf-tag">ICWSM 2023</span>
-        <span class="rel-title">Computational Approaches to Studying Anti-Social Behaviour in Social Media</span>
-        <span class="rel-note"><strong>Similarities:</strong> Both tutorials cover computational analysis of anti-social behavior on social media. <strong>Differences:</strong> Our tutorial focuses specifically on <em>continual learning</em> for evolving data distributions.</span>
-      </li>
-    </ul>
-  </section>
-
-</main>
-
-<!-- FOOTER -->
-<footer>
-  <p>ICWSM 2026 Tutorial &mdash; <em>Continual Learning for Online Behavioral Analytics</em></p>
-  <p>Information Sciences and Technology Department, George Mason University, Fairfax, Virginia</p>
-  <p style="margin-top: 10px;">Supported in part by the SOCYTI grant (331736), Western Norway Research Institute.</p>
-</footer>
+    <!-- FOOTER -->
+    <footer>
+        <p>ICWSM 2026 Tutorial &mdash; <em>Continual Learning for Online Behavioral Analytics</em></p>
+        <p>Information Sciences and Technology Department, George Mason University, Fairfax, Virginia</p>
+        <p style="margin-top: 10px;">Supported in part by the SOCYTI grant (331736), Western Norway Research Institute.
+        </p>
+    </footer>
 
 </body>
+
 </html>
